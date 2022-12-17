@@ -13,6 +13,9 @@ _This is a tool for me to learn Go, so you probably shouldn't use this._
 λ ature ktof 273.15
 32
 
+λ ature ktof 273.15 | xargs ature ftoc | xargs ature ctof
+32
+
 λ ature ftoc -- -10
 -23.333333333333336
 ```
