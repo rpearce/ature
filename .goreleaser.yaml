@@ -1,36 +1,47 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
-before:
-  hooks:
-    # You may remove this if you don't use go modules.
-    - go mod tidy
-    # you may remove this if you don't need go generate
-    - go generate ./...
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+project_name: ature
+
+# No `go mod tidy` before-hook: CI already fails on an untidy module, and a
+# hook would rewrite go.mod after goreleaser checked the tree is clean.
+
 builds:
-  - env:
+  - main: .
+    binary: ature
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
-      - windows
       - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    # Reproducible builds: strip local paths and stamp the commit's
+    # timestamp rather than the build machine's.
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+    ldflags:
+      # Prefixed with v so release binaries match the vX.Y.Z that go install
+      # reports from the module version.
+      - -s -w -X main.version=v{{ .Version }}
+
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+  - formats:
+      - tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+
 checksum:
-  name_template: 'checksums.txt'
+  name_template: checksums.txt
+
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
+
 changelog:
   sort: asc
-  filters:
-    exclude:
-      - '^docs:'
-      - '^test:'
-
-# modelines, feel free to remove those if you don't want/use them:
-# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-# vim: set ts=2 sw=2 tw=0 fo=cnqoj
