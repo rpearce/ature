@@ -1,0 +1,25 @@
+[tools]
+go = "1.27.1"
+golangci-lint = "2.13.2"
+goreleaser = "2.18.2"
+"go:golang.org/x/vuln/cmd/govulncheck" = "1.8.0"
+
+[tasks.test]
+description = "Vet and run the tests with the race detector"
+run = ["go vet ./...", "go test -race -cover -shuffle=on ./..."]
+
+[tasks.lint]
+description = "Run golangci-lint"
+run = "golangci-lint run"
+
+[tasks.fmt]
+description = "Format Go files with gofumpt and goimports"
+run = "golangci-lint fmt"
+
+[tasks.vuln]
+description = "Check dependencies for known vulnerabilities"
+run = "govulncheck ./..."
+
+[tasks.snapshot]
+description = "Build a local snapshot release into dist/"
+run = "goreleaser release --snapshot --clean"

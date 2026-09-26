@@ -1,0 +1,41 @@
+version: "2"
+
+linters:
+  # standard = errcheck, govet, ineffassign, staticcheck, unused
+  default: standard
+  enable:
+    - copyloopvar
+    - errorlint
+    - exhaustive
+    - gocritic
+    - gosec
+    - intrange
+    - misspell
+    - modernize
+    - nilerr
+    - paralleltest
+    - perfsprint
+    - predeclared
+    - revive
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - usestdlibvars
+  exclusions:
+    # Only the standard error-handling exclusions. The "comments" preset is
+    # deliberately left out so revive enforces doc comments on exported names.
+    presets:
+      - std-error-handling
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+  settings:
+    gofumpt:
+      extra:
+        group-params: true
+    goimports:
+      local-prefixes:
+        - github.com/rpearce/ature
